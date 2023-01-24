@@ -43,8 +43,8 @@ jobs:
           push: true
           labels: |
             maintainer=${{ github.repository_owner }}
-            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}-native
             org.opencontainers.image.description=Commit message: ${{ github.event.head_commit.message }}
           tags: |
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ github.sha }}
+            ghcr.io/${{ github.repository }}-native:latest
+            ghcr.io/${{ github.repository }}-native:${{ github.sha }}
