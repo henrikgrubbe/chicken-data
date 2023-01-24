@@ -26,10 +26,14 @@ class EggEventService {
     @Transactional
     @CacheInvalidateAll(cacheName = "eggEvents")
     fun createOrUpdateEggEvent(id: Long, eggEvent: EggEvent): EggEvent {
-        eggEvent.id = id
-        eggEvent.persist()
+        val savedEggEvent = EggEvent.findById(id)?.also {
+            it.amount = eggEvent.amount
+            it.date = eggEvent.date
+        } ?: eggEvent
 
-        return eggEvent
+        savedEggEvent.persist()
+
+        return savedEggEvent
     }
 
     @Transactional
