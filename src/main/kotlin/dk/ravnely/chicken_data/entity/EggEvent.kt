@@ -4,7 +4,7 @@ import io.quarkus.hibernate.orm.panache.kotlin.PanacheCompanion
 import io.quarkus.panache.common.Sort
 import java.time.Instant
 import java.time.LocalDate
-import javax.persistence.*
+import javax.persistence.Entity
 
 @Entity(name = "egg_events")
 class EggEvent : PanachePostgresEntity() {

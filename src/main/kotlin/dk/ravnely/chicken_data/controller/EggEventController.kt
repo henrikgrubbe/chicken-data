@@ -25,6 +25,18 @@ class EggEventController @Inject constructor(val eggEventService: EggEventServic
             .map(EggEventOutput::fromInternal)
     }
 
+    @GET
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    fun getEggEventById(
+        @PathParam("id") id: Long,
+    ): Response {
+        return eggEventService.getEggEvent(id)
+            ?.let(EggEventOutput::fromInternal)
+            ?.let { Response.ok(it).build() }
+            ?: Response.status(Response.Status.NOT_FOUND).build()
+    }
+
     @POST
     @Path("")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -43,9 +55,11 @@ class EggEventController @Inject constructor(val eggEventService: EggEventServic
     fun putEggEvent(
         @PathParam("id") id: Long,
         eggEventInput: EggEventInput
-    ): EggEventOutput {
-        return eggEventService.createOrUpdateEggEvent(id, eggEventInput.toInternal())
-            .let(EggEventOutput::fromInternal)
+    ): Response {
+        return eggEventService.updateEggEvent(id, eggEventInput.toInternal())
+            ?.let(EggEventOutput::fromInternal)
+            ?.let { Response.ok(it).build() }
+            ?: Response.status(Response.Status.NOT_FOUND).build()
     }
 
     @DELETE

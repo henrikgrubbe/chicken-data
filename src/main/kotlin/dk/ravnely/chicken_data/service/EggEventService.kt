@@ -15,6 +15,10 @@ class EggEventService {
         return EggEvent.listAllByDate(from, to)
     }
 
+    fun getEggEvent(id: Long): EggEvent? {
+        return EggEvent.findById(id)
+    }
+
     @Transactional
     @CacheInvalidateAll(cacheName = "eggEvents")
     fun createEggEvent(eggEvent: EggEvent): EggEvent {
@@ -25,13 +29,11 @@ class EggEventService {
 
     @Transactional
     @CacheInvalidateAll(cacheName = "eggEvents")
-    fun createOrUpdateEggEvent(id: Long, eggEvent: EggEvent): EggEvent {
-        val savedEggEvent = EggEvent.findById(id)?.also {
-            it.amount = eggEvent.amount
-            it.date = eggEvent.date
-        } ?: eggEvent
-
-        savedEggEvent.persist()
+    fun updateEggEvent(id: Long, eggEvent: EggEvent): EggEvent? {
+        val savedEggEvent = EggEvent.findById(id)?.apply {
+            amount = eggEvent.amount
+            date = eggEvent.date
+        }
 
         return savedEggEvent
     }
