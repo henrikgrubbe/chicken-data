@@ -7,6 +7,9 @@ CREATE TABLE egg_events
     date              DATE                                NOT NULL,
     created_date_time TIMESTAMPTZ                         NOT NULL,
 
-    CONSTRAINT orders_pk
+    CONSTRAINT egg_events_pk
         PRIMARY KEY (id)
 );
+
+CREATE INDEX egg_events_date
+    ON egg_events (date);
