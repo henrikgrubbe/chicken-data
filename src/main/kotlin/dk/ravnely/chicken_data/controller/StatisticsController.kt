@@ -21,12 +21,16 @@ class StatisticsController @Inject constructor(val statisticsService: Statistics
         val expenses = statisticsService.calculateExpenses(from, to)
         val income = statisticsService.calculateIncome(from, to)
         val saved = statisticsService.calculateSaved(from, to)
+        val balance = income + saved - expenses
+        val numberOfEggs = statisticsService.calculateNumberOfEggs(from, to)
+
         return StatisticsOutput(
             expenses = expenses,
             income = income,
             saved = saved,
-            balance = income + saved - expenses,
-            numberOfEggs = statisticsService.calculateNumberOfEggs(from, to),
+            balance = balance,
+            numberOfEggs = numberOfEggs,
+            pricePerEgg = numberOfEggs / balance,
             daysWithChickens = statisticsService.calculateDaysWithChickens()
         )
     }
