@@ -30,8 +30,8 @@ class StatisticsController @Inject constructor(val statisticsService: Statistics
             saved = saved,
             balance = balance,
             numberOfEggs = numberOfEggs,
-            pricePerEgg = if (balance.equals(0.0)) 0.0 else numberOfEggs / expenses,
-            priceForNextEgg = if (balance.equals(0.0)) 0.0 else (numberOfEggs + 1) / expenses,
+            pricePerEgg = if (numberOfEggs == 0) 0.0 else expenses / numberOfEggs,
+            priceForNextEgg = expenses / (numberOfEggs + 1),
             daysWithChickens = statisticsService.calculateDaysWithChickens()
         )
     }
