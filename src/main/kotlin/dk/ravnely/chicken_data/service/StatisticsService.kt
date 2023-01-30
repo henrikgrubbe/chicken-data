@@ -25,7 +25,7 @@ class StatisticsService @Inject constructor(
     fun calculateExpenses(from: LocalDate, to: LocalDate): Double {
         return transactionEventService.getTransactionEvents(from, to)
             .filter { it.amount < 0 }
-            .sumOf(TransactionEvent::amount)
+            .sumOf(TransactionEvent::amount) * -1
     }
 
     fun calculateIncome(from: LocalDate, to: LocalDate): Double {
