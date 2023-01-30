@@ -22,5 +22,8 @@ data class StatisticsOutput(
     val pricePerEgg: Double,
 
     @field:Schema(required = true)
+    val priceForNextEgg: Double,
+
+    @field:Schema(required = true)
     val daysWithChickens: Long
 )
