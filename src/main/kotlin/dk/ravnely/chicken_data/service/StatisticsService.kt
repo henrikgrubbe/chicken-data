@@ -13,12 +13,12 @@ class StatisticsService @Inject constructor(
     val eggEventService: EggEventService, val transactionEventService: TransactionEventService
 ) {
 
-    private val firstChickenDate = LocalDate.of(2023, 1, 31)
+    private val firstChickenDate = LocalDate.of(2023, 2, 1)
     private val eggPrices = listOf(
         EggPrice(
-            startDate = firstChickenDate,
+            startDate = LocalDate.of(2024, 1, 1),
             endDate = LocalDate.of(2024, 1, 1),
-            price = 3.0
+            price = 3.6
         )
     )
 
