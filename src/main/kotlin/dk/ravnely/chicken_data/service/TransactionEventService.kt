@@ -4,8 +4,8 @@ import dk.ravnely.chicken_data.entity.TransactionEvent
 import io.quarkus.cache.CacheInvalidateAll
 import io.quarkus.cache.CacheResult
 import java.time.LocalDate
-import javax.enterprise.context.ApplicationScoped
-import javax.transaction.Transactional
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.transaction.Transactional
 
 @ApplicationScoped
 class TransactionEventService {

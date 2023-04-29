@@ -5,8 +5,8 @@ import dk.ravnely.chicken_data.entity.EggPrice
 import dk.ravnely.chicken_data.entity.TransactionEvent
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import javax.enterprise.context.ApplicationScoped
-import javax.inject.Inject
+import jakarta.enterprise.context.ApplicationScoped
+import jakarta.inject.Inject
 
 @ApplicationScoped
 class StatisticsService @Inject constructor(

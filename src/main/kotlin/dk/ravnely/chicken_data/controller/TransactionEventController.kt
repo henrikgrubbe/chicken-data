@@ -5,10 +5,10 @@ import dk.ravnely.chicken_data.dto.input.toInternal
 import dk.ravnely.chicken_data.dto.output.TransactionEventOutput
 import dk.ravnely.chicken_data.service.TransactionEventService
 import java.time.LocalDate
-import javax.inject.Inject
-import javax.ws.rs.*
-import javax.ws.rs.core.MediaType
-import javax.ws.rs.core.Response
+import jakarta.inject.Inject
+import jakarta.ws.rs.*
+import jakarta.ws.rs.core.MediaType
+import jakarta.ws.rs.core.Response
 
 
 @Path("/transaction-events")
