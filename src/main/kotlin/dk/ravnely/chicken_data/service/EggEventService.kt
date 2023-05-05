@@ -21,6 +21,7 @@ class EggEventService {
 
     @Transactional
     @CacheInvalidateAll(cacheName = "eggEvents")
+    @CacheInvalidateAll(cacheName = "statistics")
     fun createEggEvent(eggEvent: EggEvent): EggEvent {
         eggEvent.persist()
 
@@ -29,6 +30,7 @@ class EggEventService {
 
     @Transactional
     @CacheInvalidateAll(cacheName = "eggEvents")
+    @CacheInvalidateAll(cacheName = "statistics")
     fun updateEggEvent(id: Long, eggEvent: EggEvent): EggEvent? {
         val savedEggEvent = EggEvent.findById(id)?.apply {
             amount = eggEvent.amount
@@ -40,6 +42,7 @@ class EggEventService {
 
     @Transactional
     @CacheInvalidateAll(cacheName = "eggEvents")
+    @CacheInvalidateAll(cacheName = "statistics")
     fun deleteEggEvent(id: Long): Boolean {
         return EggEvent.deleteById(id)
     }

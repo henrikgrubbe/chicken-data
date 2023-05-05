@@ -1,56 +1,89 @@
 package dk.ravnely.chicken_data.service
 
-import dk.ravnely.chicken_data.entity.EggEvent
-import dk.ravnely.chicken_data.entity.EggPrice
-import dk.ravnely.chicken_data.entity.TransactionEvent
-import java.time.LocalDate
-import java.time.temporal.ChronoUnit
+import dk.ravnely.chicken_data.entity.*
+import io.quarkus.cache.CacheResult
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject
+import java.time.LocalDate
+import java.time.temporal.ChronoUnit
+import java.time.temporal.TemporalAdjusters
 
 @ApplicationScoped
-class StatisticsService @Inject constructor(
-    val eggEventService: EggEventService, val transactionEventService: TransactionEventService
+class StatisticsService
+@Inject
+constructor(
+    val eggEventService: EggEventService,
+    val transactionEventService: TransactionEventService
 ) {
-
-    private val firstChickenDate = LocalDate.of(2023, 2, 1)
-    private val eggPrices = listOf(
-        EggPrice(
-            startDate = LocalDate.of(2023, 1, 1),
-            endDate = LocalDate.of(2024, 1, 1),
-            price = 3.6
-        )
-    )
-
-    fun calculateExpenses(from: LocalDate, to: LocalDate): Double {
-        return transactionEventService.getTransactionEvents(from, to)
-            .filter { it.amount < 0 }
-            .sumOf(TransactionEvent::amount) * -1
+  fun getStatistics(from: LocalDate, to: LocalDate, groupByUnit: GroupByUnit?): List<Statistics> {
+    if (groupByUnit == null) {
+      return listOf(getStatistics(from, to))
     }
 
-    fun calculateIncome(from: LocalDate, to: LocalDate): Double {
-        return transactionEventService.getTransactionEvents(from, to)
-            .filter { it.amount > 0 }
-            .sumOf(TransactionEvent::amount)
-    }
+    return from
+        .datesUntil(to)
+        .toList()
+        .groupBy { truncateLocalDate(it, groupByUnit) }
+        .map { (_, dates) -> getStatistics(dates.first(), dates.last()) }
+  }
 
-    fun calculateNumberOfEggs(from: LocalDate, to: LocalDate): Int {
-        return eggEventService.getEggEvents(from, to)
-            .sumOf(EggEvent::amount)
-    }
+  @CacheResult(cacheName = "statistics")
+  fun getStatistics(from: LocalDate, to: LocalDate): Statistics {
+    val transactionEvents = transactionEventService.getTransactionEvents(from, to)
+    val eggEvents = eggEventService.getEggEvents(from, to)
 
-    fun calculateSaved(from: LocalDate, to: LocalDate): Double {
-        return eggEventService.getEggEvents(from, to)
-            .sumOf { getEggPriceByLocalDate(it.date) * it.amount }
+    return statisticsFromEvents(from, to, transactionEvents, eggEvents)
+  }
+
+  companion object {
+    private fun statisticsFromEvents(
+        from: LocalDate,
+        to: LocalDate,
+        transactionEvents: List<TransactionEvent>,
+        eggEvents: List<EggEvent>
+    ): Statistics {
+      val expenses = transactionEvents.filter { it.amount < 0 }.sumOf(TransactionEvent::amount) * -1
+      val income = transactionEvents.filter { it.amount > 0 }.sumOf(TransactionEvent::amount)
+      val saved = eggEvents.sumOf { getEggPriceByLocalDate(it.date) * it.amount }
+      val balance = income + saved - expenses
+      val numberOfEggs = eggEvents.sumOf(EggEvent::amount)
+
+      return Statistics(
+          from = from,
+          to = to,
+          expenses = expenses,
+          income = income,
+          saved = saved,
+          balance = balance,
+          numberOfEggs = numberOfEggs,
+          pricePerEgg = if (numberOfEggs == 0) 0.0 else expenses / numberOfEggs,
+          priceForNextEgg = expenses / (numberOfEggs + 1),
+          daysWithChickens = ChronoUnit.DAYS.between(firstChickenDate, LocalDate.now()))
     }
 
     private fun getEggPriceByLocalDate(date: LocalDate): Double {
-        return eggPrices.find {
+      return eggPrices
+          .find {
             (date.isAfter(it.startDate) || date.isEqual(it.startDate)) && date.isBefore(it.endDate)
-        }?.price ?: 3.0
+          }
+          ?.price
+          ?: 3.0
     }
 
-    fun calculateDaysWithChickens(): Long {
-        return ChronoUnit.DAYS.between(firstChickenDate, LocalDate.now())
+    private val firstChickenDate = LocalDate.of(2023, 2, 1)
+    private val eggPrices =
+        listOf(
+            EggPrice(
+                startDate = LocalDate.of(2023, 1, 1),
+                endDate = LocalDate.of(2024, 1, 1),
+                price = 3.6))
+
+    private fun truncateLocalDate(localDate: LocalDate, groupByUnit: GroupByUnit): LocalDate {
+      return when (groupByUnit) {
+        GroupByUnit.DAILY -> localDate
+        GroupByUnit.MONTHLY -> localDate.with(TemporalAdjusters.firstDayOfMonth())
+        GroupByUnit.YEARLY -> localDate.with(TemporalAdjusters.firstDayOfYear())
+      }
     }
+  }
 }

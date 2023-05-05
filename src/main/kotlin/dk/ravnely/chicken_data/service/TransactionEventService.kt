@@ -21,6 +21,7 @@ class TransactionEventService {
 
     @Transactional
     @CacheInvalidateAll(cacheName = "transactionEvents")
+    @CacheInvalidateAll(cacheName = "statistics")
     fun createTransactionEvent(transactionEvent: TransactionEvent): TransactionEvent {
         transactionEvent.persist()
 
@@ -29,6 +30,7 @@ class TransactionEventService {
 
     @Transactional
     @CacheInvalidateAll(cacheName = "transactionEvents")
+    @CacheInvalidateAll(cacheName = "statistics")
     fun updateTransactionEvent(id: Long, transactionEvent: TransactionEvent): TransactionEvent? {
         val savedTransactionEvent = TransactionEvent.findById(id)?.apply {
             amount = transactionEvent.amount
@@ -41,6 +43,7 @@ class TransactionEventService {
 
     @Transactional
     @CacheInvalidateAll(cacheName = "transactionEvents")
+    @CacheInvalidateAll(cacheName = "statistics")
     fun deleteTransactionEvent(id: Long): Boolean {
         return TransactionEvent.deleteById(id)
     }
