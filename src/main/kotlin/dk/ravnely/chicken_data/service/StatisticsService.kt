@@ -28,7 +28,7 @@ constructor(
         .datesUntil(to)
         .toList()
         .groupBy { truncateLocalDate(it, groupByUnit) }
-        .map { (_, dates) -> getStatistics(dates.first(), dates.last()) }
+        .map { (_, dates) -> getStatistics(dates.first(), dates.last().plusDays(1)) }
   }
 
   @CacheResult(cacheName = "statistics")
