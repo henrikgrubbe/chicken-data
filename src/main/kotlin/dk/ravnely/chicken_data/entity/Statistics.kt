@@ -14,4 +14,3 @@ data class Statistics(
     val priceForNextEgg: Double,
     val daysWithChickens: Long
 )
-

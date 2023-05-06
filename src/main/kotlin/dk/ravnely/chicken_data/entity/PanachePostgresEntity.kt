@@ -8,8 +8,6 @@ import jakarta.persistence.MappedSuperclass
 
 @MappedSuperclass
 open class PanachePostgresEntity : PanacheEntityBase {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    open var id: Long? = null
-    override fun toString() = "${javaClass.simpleName}<$id>"
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY) open var id: Long? = null
+  override fun toString() = "${javaClass.simpleName}<$id>"
 }

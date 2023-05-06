@@ -1,6 +1,10 @@
 package dk.ravnely.chicken_data.service
 
-import dk.ravnely.chicken_data.entity.*
+import dk.ravnely.chicken_data.entity.EggEvent
+import dk.ravnely.chicken_data.entity.EggPrice
+import dk.ravnely.chicken_data.entity.GroupByUnit
+import dk.ravnely.chicken_data.entity.Statistics
+import dk.ravnely.chicken_data.entity.TransactionEvent
 import io.quarkus.cache.CacheResult
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.inject.Inject

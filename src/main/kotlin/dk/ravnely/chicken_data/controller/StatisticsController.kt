@@ -9,20 +9,19 @@ import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
 import java.time.LocalDate
 
-
 @Path("/statistics")
 class StatisticsController @Inject constructor(val statisticsService: StatisticsService) {
 
-    @GET
-    @Path("")
-    @Produces(MediaType.APPLICATION_JSON)
-    fun getStats(
-        @QueryParam("from") from: LocalDate,
-        @QueryParam("to") to: LocalDate,
-        @QueryParam("unit") groupByUnitInput: GroupByUnitInput?
-    ): List<StatisticsOutput> {
-        return statisticsService
-            .getStatistics(from, to, groupByUnitInput?.toInternal())
-            .map(StatisticsOutput::fromInternal)
-    }
+  @GET
+  @Path("")
+  @Produces(MediaType.APPLICATION_JSON)
+  fun getStats(
+      @QueryParam("from") from: LocalDate,
+      @QueryParam("to") to: LocalDate,
+      @QueryParam("unit") groupByUnitInput: GroupByUnitInput?
+  ): List<StatisticsOutput> {
+    return statisticsService
+        .getStatistics(from, to, groupByUnitInput?.toInternal())
+        .map(StatisticsOutput::fromInternal)
+  }
 }
