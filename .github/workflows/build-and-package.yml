@@ -34,7 +34,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Package and push
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           file: "./src/main/docker/Dockerfile.jvm"
           context: .
